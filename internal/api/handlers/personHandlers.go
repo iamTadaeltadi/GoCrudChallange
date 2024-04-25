@@ -1,5 +1,4 @@
 package handlers
-
 import (
 	"encoding/json"
 	"net/http"
@@ -48,6 +47,12 @@ func GetPerson(w http.ResponseWriter, r *http.Request) {
 
 func GetAllPersons(w http.ResponseWriter, r *http.Request) {
 	persons := storage.GetAllPersons()
+
+	if len(persons) == 0 {
+		customMessage := "No persons found"
+		http.Error(w, customMessage, http.StatusOK)
+		return
+	}
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(persons)

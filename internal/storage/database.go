@@ -1,9 +1,11 @@
 package storage
 
 import (
-	"sync"
-	"github.com/google/uuid"
+	"fmt"
 	"myproject/internal/api/models"
+	"sync"
+
+	"github.com/google/uuid"
 )
 
 type DB struct {
@@ -36,7 +38,7 @@ func GetPerson(id string) (models.Person, error) {
 
 	p, ok := db.m[id]
 	if !ok {
-		return models.Person{}, nil
+		return models.Person{}, fmt.Errorf("PERSON NOT FOUND")
 	}
 
 	return p, nil
@@ -60,7 +62,7 @@ func UpdatePerson(updatedPerson models.Person) (models.Person, error) {
 
 	p, ok := db.m[updatedPerson.ID]
 	if !ok {
-		return models.Person{}, nil
+		return models.Person{}, fmt.Errorf("PERSON NOT FOUND")
 	}
 
 	p.Name = updatedPerson.Name
@@ -78,7 +80,7 @@ func DeletePerson(id string) error {
 
 	_, ok := db.m[id]
 	if !ok {
-		return nil
+		return fmt.Errorf("PERSON NOT FOUND")
 	}
 
 	delete(db.m, id)
